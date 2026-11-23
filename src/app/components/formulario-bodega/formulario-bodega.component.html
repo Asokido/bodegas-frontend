@@ -1,0 +1,28 @@
+<form [formGroup]="form" (ngSubmit)="guardar()">
+  <h2>Registrar bodega</h2>
+
+  <label>
+    Nombre
+    <input type="text" formControlName="nombre" />
+  </label>
+  @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+    <small class="error">El nombre es obligatorio (máximo 100 caracteres).</small>
+  }
+
+  <label>
+    Ubicación
+    <input type="text" formControlName="ubicacion" />
+  </label>
+  @if (form.controls.ubicacion.touched && form.controls.ubicacion.invalid) {
+    <small class="error">La ubicación es obligatoria (máximo 200 caracteres).</small>
+  }
+
+  <button type="submit" [disabled]="enviando()">Registrar</button>
+
+  @if (mensaje()) {
+    <p class="ok">{{ mensaje() }}</p>
+  }
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+</form>

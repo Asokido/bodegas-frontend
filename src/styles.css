@@ -1,1 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+body { font-family: sans-serif; margin: 2rem; color: #000; background: #fff; }
+form { display: flex; flex-direction: column; gap: 0.5rem; max-width: 360px; margin-bottom: 2rem; }
+input { padding: 0.4rem; border: 1px solid #000; }
+button { padding: 0.5rem; cursor: pointer; border: 1px solid #000; background: #fff; color: #000; }
+button:disabled { color: #888; border-color: #888; cursor: not-allowed; }
+table { border-collapse: collapse; width: 100%; max-width: 700px; }
+th, td { border: 1px solid #000; padding: 0.5rem; text-align: left; }
+th { background: #e5e5e5; color: #000; }
+.error { color: #000; font-weight: bold; }
+.ok { color: #000; }
