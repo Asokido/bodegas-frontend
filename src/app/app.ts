@@ -32,7 +32,10 @@ export class App implements OnInit {
   // Los datos siempre vienen de GET /bodegas, nunca de valores fijos
   cargarBodegas(): void {
     this.bodegaService.obtenerBodegas().subscribe({
-      next: (data) => this.bodegas.set(data),
+      next: (data) => {
+        this.bodegas.set(data);
+        this.error.set('');
+      },
       error: () => this.error.set('No se pudieron cargar las bodegas. ¿Está corriendo el backend?'),
     });
   }

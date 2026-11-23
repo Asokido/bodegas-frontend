@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BodegaService } from '../../services/bodega.service';
 import { Bodega } from '../../models/bodega.model';
@@ -20,8 +21,8 @@ export class FormularioBodegaComponent {
   enviando = signal(false);
 
   form = this.fb.nonNullable.group({
-    nombre: ['', [Validators.required, Validators.maxLength(100)]],
-    ubicacion: ['', [Validators.required, Validators.maxLength(200)]],
+    nombre: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(100)]],
+    ubicacion: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(200)]],
   });
 
   guardar(): void {
@@ -34,15 +35,23 @@ export class FormularioBodegaComponent {
     this.error.set('');
     this.mensaje.set('');
 
-    this.bodegaService.registrarBodega(this.form.getRawValue()).subscribe({
+    const { nombre, ubicacion } = this.form.getRawValue();
+
+    this.bodegaService.registrarBodega({ nombre: nombre.trim(), ubicacion: ubicacion.trim() }).subscribe({
       next: (bodega) => {
         this.mensaje.set(`Bodega "${bodega.nombre}" registrada.`);
         this.form.reset();
         this.enviando.set(false);
         this.bodegaRegistrada.emit(bodega);
       },
-      error: () => {
-        this.error.set('No se pudo registrar la bodega. Verifica que el backend esté en ejecución.');
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 400) {
+          this.error.set('Datos inválidos, revisa el nombre y la ubicación.');
+        } else if (err.status === 0) {
+          this.error.set('No se pudo conectar con el backend, verifica que esté corriendo.');
+        } else {
+          this.error.set('No se pudo registrar la bodega.');
+        }
         this.enviando.set(false);
       },
     });
